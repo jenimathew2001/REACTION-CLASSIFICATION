@@ -26,9 +26,11 @@ if not os.path.exists(model_filename):
 # Now load the model with joblib
 final_model = joblib.load(model_filename)
 
+st.write("Loading explainer...")
 # Load using explainer
 with open('lime_explainer.dill', 'rb') as f:
     explainer = dill.load(f)
+st.write("Explainer loaded successfully.")
 
 # Convert SMILES to ECFP
 def smiles_to_ecfp(smiles, radius=3, nBits=2048):
