@@ -127,11 +127,23 @@ if user_input:
     # GET REACTANT AND PRODUCT BIT INFO
 
     # Split the target reaction into reactants and products
-    reactants, products = user_input.split(">>")
+    try:
+        reactants, products = user_input.split(">>")
+    except ValueError:
+        st.error("Invalid input format. Please use the format: `Reactant>>Product`.")
+        st.stop()
     
     # Convert the SMILES representation of the reactants and products into RDKit molecule objects
     r_mol = Chem.MolFromSmiles(reactants)
     p_mol = Chem.MolFromSmiles(products)
+
+    # Check if the molecules were created successfully
+    if r_mol is None:
+        st.error(f"Could not parse reactant SMILES: `{reactants}`. Please check the format.")
+        st.stop()
+    if p_mol is None:
+        st.error(f"Could not parse product SMILES: `{products}`. Please check the format.")
+        st.stop()
 
     # Dictionaries to store bit information for reactants and products
     r_bi = {}
