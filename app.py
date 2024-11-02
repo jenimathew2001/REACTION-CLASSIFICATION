@@ -243,6 +243,7 @@ if user_input:
             for bit, importance in product_bits:
                 psmiles = product_smiles.get(bit, None)
                 if psmiles:
+                    st.markdown("### Products")
                     #display_molecule(bit, importance, psmiles, "Product")
 
                 
