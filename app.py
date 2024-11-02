@@ -215,10 +215,10 @@ if user_input:
     reagent_smiles = smiles_from_bitinfo(r_mol, r_bi)
     product_smiles = smiles_from_bitinfo(p_mol, updated_p_bi)
 
-    st.markdown("loading explainer")
+    st.markdown("Loading explainer......")
 
     exp = explainer.explain_instance(np.asarray(reaction_ecfp), final_model.predict_proba, num_features=len(reaction_ecfp), num_samples=2000)
-    st.markdown("explainer loaded")
+    st.markdown("Explainer loaded")
     map = exp.as_map()[1]
 
     # Retrieve important bits and their corresponding scores from the map
