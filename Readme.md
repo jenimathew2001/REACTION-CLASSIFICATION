@@ -45,18 +45,36 @@ To run this project locally, follow these steps:
    git clone https://github.com/yourusername/reaction-class-predictor.git
    cd reaction-class-predictor
    ```
+   If you do not have Git installed, you can download the project as a ZIP file from GitHub [here](https://github.com/yourusername/reaction-class-predictor) and extract it to access the folder.
 
-2. Install the required packages:
+2. Open your terminal and navigate to the project directory (if not already there).
+
+3. Create a new virtual environment:
+   ```bash
+   python -m venv venv
+   ```
+
+4. Activate the virtual environment:
+   - On Windows:
+     ```bash
+     venv\Scripts\activate
+     ```
+   - On macOS/Linux:
+     ```bash
+     source venv/bin/activate
+     ```
+
+5. Install the required packages:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Ensure you have the following files in your project directory:
+6. Ensure you have the following files in your project directory:
    - `label_encoder.pkl`
    - `final_model_svc.pkl.zip`
    - `lime_explainer.dill`
 
-4. Start the Streamlit app:
+7. Start the Streamlit app:
    ```bash
    streamlit run app.py
    ```
