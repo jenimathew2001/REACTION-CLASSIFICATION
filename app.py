@@ -10,6 +10,13 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import os
 import zipfile
+import sys
+
+
+def memory_usage():
+    """Reports the current memory usage of the Python process."""
+    mem = sys.getsizeof(globals())
+    st.write(f"Current memory usage: {mem / (1024 ** 2):.2f} MB")
 
 
 # LOAD MODELS
@@ -46,6 +53,9 @@ label_encoder = load_label_encoder()
 final_model = load_model()
 explainer = load_explainer()
 
+# After loading models and resources
+st.write("After loading models and resources")
+memory_usage()
     
 # Convert SMILES to ECFP
 def smiles_to_ecfp(smiles, radius=3, nBits=2048):
@@ -91,7 +101,6 @@ def smiles_from_bitinfo(mol, bit_info):
     return bit_smiles
 
 
-
 # Streamlit app setup
 st.title("🔬 Reaction Class Predictor")
 
@@ -103,12 +112,20 @@ if user_input:
 
     # Convert the input to ECFP
     reaction_ecfp = reaction_to_ecfps(user_input)
+
+    # After reaction conversion
+    st.write("After converting reaction to ECFP")
+    memory_usage()
     
     # Model prediction
     prediction = final_model.predict([reaction_ecfp])
     predicted_class = label_encoder.inverse_transform(prediction)[0]
     predicted_proba = final_model.predict_proba([reaction_ecfp])[0]
     confidence = predicted_proba.max()
+
+    # After model prediction
+    st.write("After model prediction")
+    memory_usage()
 
     # Display results in columns
     st.markdown("---")
@@ -143,6 +160,10 @@ if user_input:
     img_buffer = visualise_reaction(user_input)
     st.image(img_buffer, caption='Reaction Structure', use_column_width=True)
     img_buffer.close()
+
+    # After visualizing reaction
+    st.write("After visualizing reaction")
+    memory_usage()
 
 
     # GET REACTANT AND PRODUCT BIT INFO
@@ -182,8 +203,10 @@ if user_input:
     reagent_smiles = smiles_from_bitinfo(r_mol, r_bi)
     product_smiles = smiles_from_bitinfo(p_mol, updated_p_bi)
 
-    exp = explainer.explain_instance(np.asarray(reaction_ecfp), final_model.predict_proba, num_features=len(reaction_ecfp))
+    st.markdown("loading explainer")
 
+    exp = explainer.explain_instance(np.asarray(reaction_ecfp), final_model.predict_proba, num_features=len(reaction_ecfp))
+    st.markdown("explainer loaded")
     map = exp.as_map()[1]
 
     # Retrieve important bits and their corresponding scores from the map
@@ -191,6 +214,10 @@ if user_input:
     importance_scores = [i[1] for i in map]
 
     sorted_map = sorted(map, key=lambda tup: tup[1], reverse=True)
+
+    # After retrieving bit information
+    st.write("After retrieving bit information")
+    memory_usage()
 
 
     # Display bit-level importance with molecular structures
@@ -234,8 +261,8 @@ if user_input:
             for bit, importance in reactant_bits:
                 rsmiles = reagent_smiles.get(bit, None)
                 if rsmiles:
-                    #display_molecule(bit, importance, rsmiles, "Reactant")
-                    st.markdown(f"Reactant: {bit}, Importance: {importance}, SMILES: {rsmiles}")
+                    display_molecule(bit, importance, rsmiles, "Reactant")
+                    
 
     # Display Products in the second column with scrolling enabled
     with col2:
@@ -244,8 +271,7 @@ if user_input:
             for bit, importance in product_bits:
                 psmiles = product_smiles.get(bit, None)
                 if psmiles:
-                    st.markdown(f"Product: {bit}, Importance: {importance}, SMILES: {psmiles}")
-                    #display_molecule(bit, importance, psmiles, "Product")
+                    display_molecule(bit, importance, psmiles, "Product")
 
                 
     # Clear variables to free memory
