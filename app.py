@@ -136,6 +136,7 @@ if user_input:
     st.subheader("Prediction Results")
     col1, col2 = st.columns(2)
     col1.metric("Predicted Reaction Class {specific_message}", predicted_class)
+    st.write(f"**Specific Reaction Type:** {specific_message}")
     col2.metric("Confidence Level", f"{confidence:.2%}", delta_color="inverse")
 
     # Show confidence alert if low
