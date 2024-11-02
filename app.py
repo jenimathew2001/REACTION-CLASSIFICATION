@@ -13,11 +13,32 @@ import zipfile
 import sys
 
 
-def memory_usage():
-    """Reports the current memory usage of the Python process."""
+def display_memory_usage():
+    """Display current memory usage."""
     mem = sys.getsizeof(globals())
-    st.write(f"Current memory usage: {mem / (1024 ** 2):.2f} MB")
+    st.session_state.memory_usage = mem / (1024 ** 2)  # Convert bytes to MB
+    st.write(f"Current memory usage: {st.session_state.memory_usage:.2f} MB")
 
+# Initialize session state for memory usage if it doesn't exist
+if 'memory_usage' not in st.session_state:
+    st.session_state.memory_usage = 0.0
+
+# Periodic memory check
+if 'last_check_time' not in st.session_state:
+    st.session_state.last_check_time = time.time()
+
+# Set the interval for memory checks (e.g., every 5 seconds)
+check_interval = 5  # seconds
+
+# Check if it's time to update memory usage
+if time.time() - st.session_state.last_check_time >= check_interval:
+    display_memory_usage()
+    st.session_state.last_check_time = time.time()
+
+# Optional: Trigger a rerun for continuous update
+if st.button("Refresh Memory Usage"):
+    st.experimental_rerun()
+    
 
 # LOAD MODELS
     
