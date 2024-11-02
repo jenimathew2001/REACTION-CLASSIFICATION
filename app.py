@@ -11,6 +11,7 @@ from PIL import Image
 import os
 import zipfile
 import sys
+import time
 
 
 def display_memory_usage():
