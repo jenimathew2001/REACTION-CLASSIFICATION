@@ -104,5 +104,4 @@ To understand how the models were created, check out the training code in this r
 
 - The application has been successfully deployed on **Heroku**. Users can access the live app online for predictions.
 - Due to memory limitations during deployment, the number of samples used for the LIME explainer was reduced. This means that while the application runs smoothly in a production environment, users may experiment with increasing the sample size when running the application locally to enhance explanation quality.
-
 ```
