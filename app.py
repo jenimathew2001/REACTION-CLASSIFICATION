@@ -182,7 +182,7 @@ if user_input:
     reagent_smiles = smiles_from_bitinfo(r_mol, r_bi)
     product_smiles = smiles_from_bitinfo(p_mol, updated_p_bi)
 
-    exp = explainer.explain_instance(np.asarray(reaction_ecfp), final_model.predict_proba, num_features=10)
+    exp = explainer.explain_instance(np.asarray(reaction_ecfp), final_model.predict_proba, num_features=len(reaction_ecfp))
 
     map = exp.as_map()[1]
 
