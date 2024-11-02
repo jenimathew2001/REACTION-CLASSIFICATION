@@ -217,7 +217,7 @@ if user_input:
 
     st.markdown("loading explainer")
 
-    exp = explainer.explain_instance(np.asarray(reaction_ecfp), final_model.predict_proba, num_features=len(reaction_ecfp), num_samples=3000)
+    exp = explainer.explain_instance(np.asarray(reaction_ecfp), final_model.predict_proba, num_features=len(reaction_ecfp), num_samples=1000)
     st.markdown("explainer loaded")
     map = exp.as_map()[1]
 
