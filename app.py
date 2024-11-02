@@ -113,12 +113,29 @@ if user_input:
     predicted_proba = final_model.predict_proba([reaction_ecfp])[0]
     confidence = predicted_proba.max()
 
+    # Map predicted classes to specific messages
+    specific_messages = {
+    'Alkene': "Alkene Metathesis",
+    'alcohol1': "Alcohol Oxidation",
+     'suzuki':"Suzuki-Miyaura",
+    'ester1':"Ester Hydrolysis",
+    'amide1':"Amide Bond Formation",
+    'Baylis':"Baylis-Hillman",
+    'heck':"Heck Alkenylation",
+    'grignard':"Grignard Addition",
+    'buchwald':"Buchwald-Hartwig Amination"    
+        }
+
+    # Get the specific message or default message if not found
+    specific_message = specific_messages.get(predicted_class, "No specific reaction identified for this class.")
+
+
 
     # Display results in columns
     st.markdown("---")
     st.subheader("Prediction Results")
     col1, col2 = st.columns(2)
-    col1.metric("Predicted Reaction Class", predicted_class)
+    col1.metric("Predicted Reaction Class {specific_message}", predicted_class)
     col2.metric("Confidence Level", f"{confidence:.2%}", delta_color="inverse")
 
     # Show confidence alert if low
