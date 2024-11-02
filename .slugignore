@@ -1,3 +1,6 @@
+# Ignore the data zip file
+Full_reactions_data.pkl.zip
+
 *.log
 tests/
 docs/
