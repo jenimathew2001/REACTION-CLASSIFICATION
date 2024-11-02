@@ -109,6 +109,10 @@ user_input = st.text_input("Example: `C1=CC=CC=C1>>C1=CC=C(C=C1)C(=O)O`", '')
 
 if user_input:
 
+    # Clear previous session state data related to the last input
+    if 'reaction_data' in st.session_state:
+        del st.session_state.reaction_data
+
     # Convert the input to ECFP
     reaction_ecfp = reaction_to_ecfps(user_input)
 
