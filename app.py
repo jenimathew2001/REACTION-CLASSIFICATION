@@ -54,8 +54,7 @@ final_model = load_model()
 explainer = load_explainer()
 
 # After loading models and resources
-st.write("After loading models and resources")
-memory_usage()
+
     
 # Convert SMILES to ECFP
 def smiles_to_ecfp(smiles, radius=3, nBits=2048):
@@ -113,9 +112,6 @@ if user_input:
     # Convert the input to ECFP
     reaction_ecfp = reaction_to_ecfps(user_input)
 
-    # After reaction conversion
-    st.write("After converting reaction to ECFP")
-    memory_usage()
     
     # Model prediction
     prediction = final_model.predict([reaction_ecfp])
@@ -123,9 +119,6 @@ if user_input:
     predicted_proba = final_model.predict_proba([reaction_ecfp])[0]
     confidence = predicted_proba.max()
 
-    # After model prediction
-    st.write("After model prediction")
-    memory_usage()
 
     # Display results in columns
     st.markdown("---")
@@ -161,9 +154,6 @@ if user_input:
     st.image(img_buffer, caption='Reaction Structure', use_column_width=True)
     img_buffer.close()
 
-    # After visualizing reaction
-    st.write("After visualizing reaction")
-    memory_usage()
 
 
     # GET REACTANT AND PRODUCT BIT INFO
@@ -214,10 +204,6 @@ if user_input:
     importance_scores = [i[1] for i in map]
 
     sorted_map = sorted(map, key=lambda tup: tup[1], reverse=True)
-
-    # After retrieving bit information
-    st.write("After retrieving bit information")
-    memory_usage()
 
 
     # Display bit-level importance with molecular structures
