@@ -11,27 +11,42 @@ from PIL import Image
 import os
 import zipfile
 
-# Load label encoder
-label_encoder = joblib.load('label_encoder.pkl')
 
-# Load trained model
+# LOAD MODELS
+    
+# Paths for the label encoder and model files
+label_encoder_path = 'label_encoder.pkl'
 zip_path = 'final_model_svc.pkl.zip'
 model_filename = 'final_model_svc.pkl'
+explainer_path = 'lime_explainer.dill'
 
-# Unzip only if the model file is not already extracted
-if not os.path.exists(model_filename):
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall()  # This will extract in the current directory
+@st.cache_resource
+def load_label_encoder():
+    # Load and cache the label encoder
+    return joblib.load(label_encoder_path)
 
-# Now load the model with joblib
-final_model = joblib.load(model_filename)
+@st.cache_resource
+def load_model():
+    # Unzip only if the model file is not already extracted
+    if not os.path.exists(model_filename):
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall()  # This will extract in the current directory
+    
+    # Load the extracted model file with joblib
+    return joblib.load(model_filename)
 
-st.write("Loading explainer...")
-# Load using explainer
-with open('lime_explainer.dill', 'rb') as f:
-    explainer = dill.load(f)
-st.write("Explainer loaded successfully.")
+@st.cache_resource
+def load_explainer():
+    # Load and cache the explainer
+    with open(explainer_path, 'rb') as f:
+        return dill.load(f)
 
+# Load resources
+label_encoder = load_label_encoder()
+final_model = load_model()
+explainer = load_explainer()
+
+    
 # Convert SMILES to ECFP
 def smiles_to_ecfp(smiles, radius=3, nBits=2048):
     mol = Chem.MolFromSmiles(smiles)
@@ -42,6 +57,7 @@ def smiles_to_ecfp(smiles, radius=3, nBits=2048):
     DataStructs.ConvertToNumpyArray(ecfp, array)
     return array
 
+@st.cache_data
 def reaction_to_ecfps(reaction_smiles, radius=3, nBits=2048):
     reactants, products = reaction_smiles.split(">>")
     reactants_ecfp = smiles_to_ecfp(reactants, radius, nBits)
@@ -84,6 +100,7 @@ st.subheader("Enter Reaction SMILES")
 user_input = st.text_input("Example: `C1=CC=CC=C1>>C1=CC=C(C=C1)C(=O)O`", '')
 
 if user_input:
+
     # Convert the input to ECFP
     reaction_ecfp = reaction_to_ecfps(user_input)
     
@@ -125,6 +142,8 @@ if user_input:
     st.subheader("Reaction Visualization")
     img_buffer = visualise_reaction(user_input)
     st.image(img_buffer, caption='Reaction Structure', use_column_width=True)
+    img_buffer.close()
+
 
     # GET REACTANT AND PRODUCT BIT INFO
 
@@ -227,7 +246,9 @@ if user_input:
                     display_molecule(bit, importance, psmiles, "Product")
 
                 
- 
+    # Clear variables to free memory
+    del reactant_bits, product_bits, rsmiles, psmiles, reagent_smiles, product_smiles, map, sorted_map, exp
+    
     # Divider and more info section
     st.markdown("---")
     with st.expander("🔍 Additional Information", expanded=False):
