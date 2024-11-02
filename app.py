@@ -234,7 +234,7 @@ if user_input:
             for bit, importance in reactant_bits:
                 rsmiles = reagent_smiles.get(bit, None)
                 if rsmiles:
-                    display_molecule(bit, importance, rsmiles, "Reactant")
+                    #display_molecule(bit, importance, rsmiles, "Reactant")
 
     # Display Products in the second column with scrolling enabled
     with col2:
@@ -243,7 +243,7 @@ if user_input:
             for bit, importance in product_bits:
                 psmiles = product_smiles.get(bit, None)
                 if psmiles:
-                    display_molecule(bit, importance, psmiles, "Product")
+                    #display_molecule(bit, importance, psmiles, "Product")
 
                 
     # Clear variables to free memory
