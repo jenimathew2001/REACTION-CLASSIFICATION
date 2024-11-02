@@ -35,10 +35,6 @@ check_interval = 5  # seconds
 if time.time() - st.session_state.last_check_time >= check_interval:
     display_memory_usage()
     st.session_state.last_check_time = time.time()
-
-# Optional: Trigger a rerun for continuous update
-if st.button("Refresh Memory Usage"):
-    st.rerun()
     
 
 # LOAD MODELS
